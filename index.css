@@ -1,0 +1,52 @@
+* {
+  margin: 0; padding: 0;
+  user-select: none;
+  font-family: 'Rubik', sans-serif;
+}
+#topNav {
+  width: 100vw; height: 6vh;
+  background: linear-gradient(to bottom, rgba(219,159,46,1) 0%,rgba(219,159,46,1) 50%,rgba(219,159,46,1) 89%,rgba(156,112,31,1) 90%,rgba(156,112,31,1) 100%,rgba(156,112,31,1) 100%);
+}
+#gameArea {
+  position: relative;
+  width: 100vw; height: 80vh;
+  background-color: #000;
+  overflow: hidden;
+}
+#screenArea {
+  position: absolute;
+  width: 120vh; height: 80vh;
+  background-color: black;
+  z-index: 5;
+  overflow: hidden;
+}
+#innerScreenArea {
+  position: relative;
+  left: -8vh; top: -8vh;
+  width: 136vh; height: 96vh;
+}
+.mapLine {
+  width: 136vh; height: 8vh;
+}
+.mapBlock {
+  display: block; float: left;
+  width: 8vh; height: 8vh;
+  background-size: 100% 100%;
+}
+#inventoryArea {
+  position: absolute;
+  width: 100vh; height: 8vh;
+  z-index: 7
+}
+#playerArea {
+  position: absolute;
+  top: 40vh;
+  width: 8vh; height: 8vh;
+  background-image: url(Resoruce/Player/1.png); background-size: 100% 100%;
+  z-index: 6;
+}
+#statusArea {
+  position: absolute;
+  width: 100vw; height: 14vh;
+  background-color: #444;
+}
