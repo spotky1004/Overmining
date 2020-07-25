@@ -157,7 +157,7 @@ $(function (){
   }
   function rightCollision() {
     if (playerFPos[0] != playerPos[0]) {
-      blockIDThis1 = worldThis[playerFPos[1]][Math.ceil(playerPos[0]-(1-playerSize[0])/2)];
+      blockIDThis1 = worldThis[Math.floor(playerPos[1]+(1-playerSize[1]))][Math.ceil(playerPos[0]-(1-playerSize[0])/2)];
       blockIDThis2 = worldThis[playerCPos[1]][Math.ceil(playerPos[0]-(1-playerSize[0])/2)];
       if (playerVelocity[0] < 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100)) {
         playerPos[0] += playerVelocityBefore[0]*tGain;
