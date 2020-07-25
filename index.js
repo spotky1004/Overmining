@@ -7,7 +7,7 @@ $(function (){
   tSpeed = 1;
   tNow = new Date().getTime();
   tLast = new Date().getTime();
-  playerPos = [500, 74];
+  playerPos = [500, 65];
   playerVelocity = [0, 0];
   playerVelocityBefore = [0, 0];
   playerSize = [0.875, 0.875]
@@ -142,13 +142,17 @@ $(function (){
     leftCollision();
     topCollision();
     // intgerCollision();
+    console.log(playerPos);
     console.log(collisionActive);
   }
   function topCollision() {
-    blockIDThis1 = worldThis[Math.floor(playerPos[1]+(1-playerSize[1]))][playerFPos[0]];
-    blockIDThis2 = worldThis[Math.floor(playerPos[1]+(1-playerSize[1]))][playerCPos[0]];
+    blockIDThis1 = worldThis[Math.floor(playerPos[1]+(1-playerSize[1]))][Math.ceil(playerPos[0]-(1-playerSize[0])/2)];
+    blockIDThis2 = worldThis[Math.floor(playerPos[1]+(1-playerSize[1]))][Math.floor(playerPos[0]+(1-playerSize[0])/2)];
     if ((playerVelocity[1] < 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100))) {
-      playerPos[1] -= playerVelocityBefore[1]*tGain;
+      playerPos[1] += playerVelocityBefore[1]*tGain;
+      if (playerPos[1]-Math.floor(playerPos[1]) > 0.9 && playerVelocity[1] < 0.5) {
+        playerPos[1] = Math.ceil(playerPos[1])-0.01;
+      }
       playerVelocity[1] = 0;
       clearTimeout(jumpOut);
       playerJumping = 0;
@@ -173,7 +177,11 @@ $(function (){
     blockIDThis1 = worldThis[playerCPos[1]][Math.floor(playerPos[0]+(1-playerSize[0])/2)];
     blockIDThis2 = worldThis[playerCPos[1]][Math.ceil(playerPos[0]-(1-playerSize[0])/2)];
     if (playerVelocity[1] > 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100) && !playerJumping) {
-      playerPos[1] -= playerVelocityBefore[1]*tGain;
+      playerPos[1] -= playerVelocity[1]*tGain;
+      console.log(playerVelocity[1]*tGain);
+      if (playerPos[1]-Math.floor(playerPos[1]) > 0.9 && playerVelocity[1] < 0.5) {
+        playerPos[1] = Math.ceil(playerPos[1])-0.01;
+      }
       playerVelocity[1] = 0;
       touchedBottom = 1;
       collisionActive[2] = 1;
@@ -295,7 +303,7 @@ $(function (){
     }
   }
   function displayPlayer() {
-    $('#innerScreenArea').css('left', ((playerDPos[0])*8-8).toFixed(1) + 'vh').css('top', ((playerDPos[1])*8-8).toFixed(2) + 'vh');
+    $('#innerScreenArea').css('left', ((playerDPos[0])*8-8).toFixed(9) + 'vh').css('top', ((playerDPos[1])*8-8).toFixed(9) + 'vh');
   }
   function displayMap() {
     for (var i = 0; i < 12; i++) {
