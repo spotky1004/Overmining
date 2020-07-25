@@ -7,12 +7,18 @@ $(function (){
   tSpeed = 1;
   tNow = new Date().getTime();
   tLast = new Date().getTime();
-  playerPos = [500, 65];
+  homePos = [500, 73];
+  playerPos = [homePos[0], homePos[1]];
   playerVelocity = [0, 0];
   playerVelocityBefore = [0, 0];
   playerSize = [0.875, 0.875]
   playerJumping = 0;
   screenStartPos = [141, 262];
+  toggleSkill = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  skillTime = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  skillTimeM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  skillCooltime = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  skillCooltimeM = [5, 1, 1, 1, 1, 1, 1, 1, 1, 1];
   worldThis = [];
   blockThis = [];
   jumpOut = 0;
@@ -88,22 +94,22 @@ $(function (){
                 if (i > 155 && Math.random() < 0.25+(i-155)/150) {
                   if (i > 175 && Math.random() < 0.3+(i-175)/100) {
                     worldThis[i].push(8);
-                    blockThis[i].push([4000, 4000]);
+                    blockThis[i].push([3e4, 3e4]);
                   } else {
                     worldThis[i].push(7);
-                    blockThis[i].push([2000, 2000]);
+                    blockThis[i].push([8000, 8000]);
                   }
                 } else {
                   worldThis[i].push(6);
-                  blockThis[i].push([600, 600]);
+                  blockThis[i].push([2700, 2700]);
                 }
               } else {
                 worldThis[i].push(5);
-                blockThis[i].push([130, 13]);
+                blockThis[i].push([900, 900]);
               }
             } else {
               worldThis[i].push(4);
-              blockThis[i].push([60, 60]);
+              blockThis[i].push([140, 140]);
             }
           } else {
             worldThis[i].push(2);
@@ -113,14 +119,14 @@ $(function (){
           if (i > 220 && Math.random() < 0.03+(i-220)/2000) {
             if (i > 240 && Math.random() < 0.15+(i-240)/1500) {
               worldThis[i].push(11);
-              blockThis[i].push([1e6, 1e6]);
+              blockThis[i].push([1e7, 1e7]);
             } else {
               worldThis[i].push(10);
-              blockThis[i].push([8e4, 8e4]);
+              blockThis[i].push([2e5, 2e5]);
             }
           } else {
             worldThis[i].push(9);
-            blockThis[i].push([4000*(i-199), 4000*(i-199)]);
+            blockThis[i].push([8000*(i-199), 8000*(i-199)]);
           }
         }
       }
@@ -142,8 +148,6 @@ $(function (){
     leftCollision();
     topCollision();
     // intgerCollision();
-    console.log(playerPos);
-    console.log(collisionActive);
   }
   function topCollision() {
     blockIDThis1 = worldThis[Math.floor(playerPos[1]+(1-playerSize[1]))][Math.ceil(playerPos[0]-(1-playerSize[0])/2)];
@@ -178,7 +182,6 @@ $(function (){
     blockIDThis2 = worldThis[playerCPos[1]][Math.ceil(playerPos[0]-(1-playerSize[0])/2)];
     if (playerVelocity[1] > 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100) && !playerJumping) {
       playerPos[1] -= playerVelocity[1]*tGain;
-      console.log(playerVelocity[1]*tGain);
       if (playerPos[1]-Math.floor(playerPos[1]) > 0.9 && playerVelocity[1] < 0.5) {
         playerPos[1] = Math.ceil(playerPos[1])-0.01;
       }
@@ -225,11 +228,30 @@ $(function (){
   }
 
   function blockMine(xPos, yPos) {
-    blockIDThis = worldThis[yPos][xPos];
-    if (blockIDThis <= 100) {
-      blockThis[yPos][xPos][0] -= playerAtk*tGain;
-      if (blockThis[yPos][xPos][0] < 0) {
-        worldThis[yPos][xPos] = 103;
+    if (!toggleSkill[1]) {
+      blockIDThis = worldThis[yPos][xPos];
+      if (blockIDThis <= 100) {
+        blockThis[yPos][xPos][0] -= playerAtk*tGain;
+        if (blockThis[yPos][xPos][0] < 0) {
+          worldThis[yPos][xPos] = 103;
+        }
+      }
+    }
+  }
+  function skillActive(skillNum) {
+    if (skillCooltime[skillNum] < 0) {
+      skillCooltime[skillNum] = skillCooltimeM[skillNum];
+      skillTime[skillNum] = skillTimeM[skillNum];
+      switch (skillNum) {
+        case 0:
+          playerPos = [homePos[0], homePos[1]];
+          break;
+        case 1:
+          toggleSkill[1] = !toggleSkill[1];
+          break;
+        case 2:
+          toggleSkill[2] = !toggleSkill[2];
+          break;
       }
     }
   }
@@ -239,6 +261,7 @@ $(function (){
     movePlayer();
     displayPlayer();
     displayMap();
+    displaySkill();
   }
   function setPlayerVar() {
     playerFPos = [0, 0];
@@ -253,7 +276,9 @@ $(function (){
     vSpeed = 10;
     pVolGain = tGain*vSpeed;
     if (keypress['39']) {
-      blockMine(playerRPos[0]+1, playerRPos[1]);
+      if (!toggleSkill[2]) {
+        blockMine(playerRPos[0]+1, playerRPos[1]);
+      }
       playerVelocity[0] -= pVolGain;
       if (playerVelocity[0] < -5) {
         playerVelocity[0] = -5;
@@ -265,7 +290,9 @@ $(function (){
       }
     }
 		if (keypress['37']) {
-      blockMine(playerRPos[0]-1, playerRPos[1]);
+      if (!toggleSkill[2]) {
+        blockMine(playerRPos[0]-1, playerRPos[1]);
+      }
       playerVelocity[0] += pVolGain;
       if (playerVelocity[0] > 5) {
         playerVelocity[0] = 5;
@@ -277,7 +304,9 @@ $(function (){
       }
     }
     if (keypress['38']) {
-      blockMine(playerRPos[0], playerRPos[1]-1);
+      if (!toggleSkill[2]) {
+        blockMine(playerRPos[0], playerRPos[1]-1);
+      }
       if (touchedBottom && !playerJumping) {
         playerJumping = 1;
         playerVelocity[1] = 0;
@@ -289,18 +318,32 @@ $(function (){
       playerJumping = 0;
       clearTimeout(jumpOut);
     }
+    if (keypress['40']) {
+      if (!toggleSkill[2]) {
+        blockMine(playerRPos[0], playerRPos[1]+1);
+      }
+    }
+    if (keypress['72']) {
+      skillActive(0);
+    }
+    if (keypress['77']) {
+      skillActive(1);
+    }
+    if (keypress['65']) {
+      skillActive(2);
+    }
+    if (toggleSkill[2]) {
+      blockMine(playerRPos[0]+1, playerRPos[1]);
+      blockMine(playerRPos[0]-1, playerRPos[1]);
+      blockMine(playerRPos[0], playerRPos[1]-1);
+      blockMine(playerRPos[0], playerRPos[1]+1);
+    }
     playerPos[0] -= tGain*playerVelocity[0];
     overallCollision();
     if (playerJumping == 1) {
       playerVelocity[1] -= 10*tGain;
     }
     playerVelocityBefore = playerVelocity;
-    if (keypress['40']) {
-      blockMine(playerRPos[0], playerRPos[1]+1);
-    }
-    if (keypress['72']) {
-      playerPos = [500, 73];
-    }
   }
   function displayPlayer() {
     $('#innerScreenArea').css('left', ((playerDPos[0])*8-8).toFixed(9) + 'vh').css('top', ((playerDPos[1])*8-8).toFixed(9) + 'vh');
@@ -322,7 +365,21 @@ $(function (){
         } else {
           thisImgID = 3;
         }
+        if (thisBlockStatus >= 6) {
+          thisBlockStatus = 0;
+        }
         $('.mapLine:eq(' + i + ') > .mapBlock:eq(' + j + ')').css('background-image', 'url(Resoruce/BlockBreak/' + thisBlockStatus + '.png), url(Resoruce/Block/' + thisImgID + '.png)');
+      }
+    }
+  }
+  function displaySkill() {
+    for (var i = 0; i < skillCooltime.length; i++) {
+      skillCooltime[i] -= tGain;
+      skillTime[i] -= tGain;
+      if (skillCooltime[i] < 0) {
+        $('.skill:eq(' + i + ')').css('opacity', 1);
+      } else {
+        $('.skill:eq(' + i + ')').css('opacity', 1-skillCooltime[i]/skillCooltimeM[i]);
       }
     }
   }

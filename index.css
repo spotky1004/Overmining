@@ -2,6 +2,11 @@
   margin: 0; padding: 0;
   user-select: none;
   font-family: 'Rubik', sans-serif;
+  overflow: hidden;
+}
+.center {
+  margin: 0 auto;
+  width: auto; height: auto;
 }
 #topNav {
   width: 100vw; height: 6vh;
@@ -69,4 +74,15 @@
   position: absolute;
   width: 100vw; height: 14vh;
   background-color: #444;
+}
+#skillsArea {
+  margin: 0.5vh auto;
+  width: 100vh; height: 6vh;
+  background-color: #666;
+}
+.skill {
+  display: block; float: left;
+  margin: 0 2vh;
+  width: 6vh; height: 6vh;
+  background-size: 100% 100%;
 }
