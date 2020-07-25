@@ -10,6 +10,7 @@ $(function (){
   playerPos = [500, 74];
   playerVelocity = [0, 0];
   playerVelocityBefore = [0, 0];
+  playerSize = [0.875, 0.875]
   playerJumping = 0;
   screenStartPos = [141, 262];
   worldThis = [];
@@ -141,11 +142,12 @@ $(function (){
     leftCollision();
     topCollision();
     // intgerCollision();
+    console.log(collisionActive);
   }
   function topCollision() {
-    blockIDThis1 = worldThis[playerFPos[1]][playerFPos[0]];
-    blockIDThis2 = worldThis[playerFPos[1]][playerCPos[0]];
-    if ((playerVelocity[1] < 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100)) || playerFPos[1] < 1) {
+    blockIDThis1 = worldThis[Math.floor(playerPos[1]+(1-playerSize[1]))][playerFPos[0]];
+    blockIDThis2 = worldThis[Math.floor(playerPos[1]+(1-playerSize[1]))][playerCPos[0]];
+    if ((playerVelocity[1] < 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100))) {
       playerPos[1] -= playerVelocityBefore[1]*tGain;
       playerVelocity[1] = 0;
       clearTimeout(jumpOut);
@@ -155,8 +157,8 @@ $(function (){
   }
   function rightCollision() {
     if (playerFPos[0] != playerPos[0]) {
-      blockIDThis1 = worldThis[playerFPos[1]][playerCPos[0]];
-      blockIDThis2 = worldThis[playerCPos[1]][playerCPos[0]];
+      blockIDThis1 = worldThis[playerFPos[1]][Math.ceil(playerPos[0]-(1-playerSize[0])/2)];
+      blockIDThis2 = worldThis[playerCPos[1]][Math.ceil(playerPos[0]-(1-playerSize[0])/2)];
       if (playerVelocity[0] < 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100)) {
         playerPos[0] += playerVelocityBefore[0]*tGain;
         playerVelocity[0] = 0;
@@ -168,8 +170,8 @@ $(function (){
     }
   }
   function bottomCollision() {
-    blockIDThis1 = worldThis[playerCPos[1]][playerFPos[0]];
-    blockIDThis2 = worldThis[playerCPos[1]][playerCPos[0]];
+    blockIDThis1 = worldThis[playerCPos[1]][Math.floor(playerPos[0]+(1-playerSize[0])/2)];
+    blockIDThis2 = worldThis[playerCPos[1]][Math.ceil(playerPos[0]-(1-playerSize[0])/2)];
     if (playerVelocity[1] > 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100) && !playerJumping) {
       playerPos[1] -= playerVelocityBefore[1]*tGain;
       playerVelocity[1] = 0;
@@ -186,8 +188,8 @@ $(function (){
   }
   function leftCollision() {
     if (playerFPos[0] != playerPos[0]) {
-      blockIDThis1 = worldThis[playerFPos[1]][playerFPos[0]];
-      blockIDThis2 = worldThis[playerCPos[1]][playerFPos[0]];
+      blockIDThis1 = worldThis[Math.floor(playerPos[1]+(1-playerSize[1]))][Math.floor(playerPos[0]+(1-playerSize[0])/2)];
+      blockIDThis2 = worldThis[playerCPos[1]][Math.floor(playerPos[0]+(1-playerSize[0])/2)];
       if (playerVelocity[0] > 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100)) {
         playerPos[0] += tGain*playerVelocity[0];
         playerVelocity[0] = 0;
