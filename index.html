@@ -4,17 +4,29 @@
     <meta charset="utf-8">
     <meta name="viewport" content="user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="index.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="index.js"></script>
-    <script src="vars.js"></script>
+    <link rel="stylesheet" href="index.css?ver=0.1">
+    <script src="index.js?ver=0.1"></script>
+    <script src="vars.js?ver=0.1"></script>
     <link rel="icon" href="Resoruce/favicon.ico">
-    <title>Overmining v0</title>
+    <title>Overmining v0.1</title>
   </head>
   <body>
     <div id="topNav">
-      <div id="inventoryNav">
+      <div class="inventoryNav">
         INVENTORY
+      </div>
+      <div class="inventoryNav">
+        CRAFT
+      </div>
+      <div class="inventoryNav">
+        SHOP
+      </div>
+      <div class="inventoryNav">
+        INFO
+      </div>
+      <div class="inventoryNav">
+        SETTING
       </div>
     </div>
     <div id="gameArea">
@@ -31,7 +43,20 @@
       </div>
     </div>
     <div id="statusArea">
+      <div id="basicStatusArea">
+        <span id="hpStatusArea">
 
+        </span>
+        <span id="mpStatusArea">
+
+        </span>
+      </div>
+      <div id="skillsArea">
+
+      </div>
+      <div id="expArea">
+
+      </div>
     </div>
   </body>
 </html>

@@ -17,6 +17,8 @@ $(function (){
   jumpOut = 0;
   xCollAct = 0;
   touchedBottom = 0;
+  menuSel = -1;
+  playerHP = 100;
 
   function fixEtc() {
     screenWidthNow = $(window).width();
@@ -141,9 +143,10 @@ $(function (){
     // intgerCollision();
   }
   function topCollision() {
-    blockIDThis = worldThis[playerFPos[1]][playerFPos[0]];
-    if ((playerVelocity[1] < 0 && blockIDThis <= 100) || playerFPos[1] < 1) {
-      playerPos[1] -= playerVelocity[1]*tGain;
+    blockIDThis1 = worldThis[playerFPos[1]][playerFPos[0]];
+    blockIDThis2 = worldThis[playerFPos[1]][playerCPos[0]];
+    if ((playerVelocity[1] < 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100)) || playerFPos[1] < 1) {
+      playerPos[1] -= playerVelocityBefore[1]*tGain;
       playerVelocity[1] = 0;
       clearTimeout(jumpOut);
       playerJumping = 0;
@@ -313,6 +316,19 @@ $(function (){
       }
     }
   }
+
+  $(document).on('click','.inventoryNav',function() {
+    indexThis = $('.inventoryNav').index(this);
+    console.log(indexThis);
+    if (menuSel != indexThis) {
+      menuSel = indexThis;
+      $('.inventoryNav').removeClass('activeMenu');
+      $('.inventoryNav:eq(' + indexThis + ')').addClass('activeMenu');
+    } else {
+      menuSel = -1;
+      $('.inventoryNav:eq(' + indexThis + ')').removeClass('activeMenu');
+    }
+  });
 
   setInterval( function () {
     fixEtc();
