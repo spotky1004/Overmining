@@ -1,7 +1,8 @@
 blocks = {
   0: {
     'dropItem' : 0,
-    'dropLevel' : 0,
-    'dropChance' : 1
+    'dropLevel' : -1,
+    'dropChance' : 1,
+    'onHitDrop' : -1
   },
 }

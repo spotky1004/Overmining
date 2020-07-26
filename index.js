@@ -7,7 +7,7 @@ $(function (){
   tSpeed = 1;
   tNow = new Date().getTime();
   tLast = new Date().getTime();
-  homePos = [500, 73];
+  homePos = [500, 71];
   playerPos = [homePos[0], homePos[1]];
   playerVelocity = [0, 0];
   playerVelocityBefore = [0, 0];
@@ -131,6 +131,66 @@ $(function (){
         }
       }
     }
+    for (var i = 0; i < 1000; i++) {
+      if (Math.random() < 0.2) {
+        worldThis[dirtHeight[i]+74][i] = 104+Math.floor(Math.random()*3);
+      }
+      if (Math.random() < 0.025) {
+        worldThis[dirtHeight[i]+74][i] = 14+Math.floor(Math.random()*2);
+        blockThis[dirtHeight[i]+74][i] = [10, 10];
+      }
+      if (Math.random() < 0.02) {
+        woodHeight = Math.floor(Math.random()*6)+4;
+        for (var j = 0; j < woodHeight; j++) {
+          worldThis[dirtHeight[i]+74-j][i] = 12;
+          blockThis[dirtHeight[i]+74-j][i] = [25, 25];
+        }
+        leafThis = Math.floor(Math.random()*2)+2;
+        for (var j = 0; j < leafThis; j++) {
+          worldThis[dirtHeight[i]+75-woodHeight][i-leafThis+j] = 13;
+          blockThis[dirtHeight[i]+75-woodHeight][i-leafThis+j] = [5, 5];
+        }
+        leafThis = Math.floor(Math.random()*2)+2;
+        for (var j = 0; j < leafThis; j++) {
+          worldThis[dirtHeight[i]+75-woodHeight][i+leafThis-j] = 13;
+          blockThis[dirtHeight[i]+75-woodHeight][i+leafThis-j] = [5, 5];
+        }
+        leafThis = Math.floor(Math.random()*2)+1;
+        for (var j = 0; j < leafThis; j++) {
+          worldThis[dirtHeight[i]+74-woodHeight][i-leafThis+j] = 13;
+          blockThis[dirtHeight[i]+74-woodHeight][i-leafThis+j] = [5, 5];
+        }
+        leafThis = Math.floor(Math.random()*2)+1;
+        for (var j = 0; j < leafThis; j++) {
+          worldThis[dirtHeight[i]+74-woodHeight][i+leafThis-j] = 13;
+          blockThis[dirtHeight[i]+74-woodHeight][i+leafThis-j] = [5, 5];
+        }
+        worldThis[dirtHeight[i]+74-woodHeight][i] = 13;
+        blockThis[dirtHeight[i]+74-woodHeight][i] = [5, 5];
+        leafThis = Math.floor(Math.random()*2);
+        for (var j = 0; j < leafThis; j++) {
+          worldThis[dirtHeight[i]+73-woodHeight][i-leafThis+j] = 13;
+          blockThis[dirtHeight[i]+73-woodHeight][i-leafThis+j] = [5, 5];
+        }
+        leafThis = Math.floor(Math.random()*2);
+        for (var j = 0; j < leafThis; j++) {
+          worldThis[dirtHeight[i]+73-woodHeight][i+leafThis-j] = 13;
+          blockThis[dirtHeight[i]+73-woodHeight][i+leafThis-j] = [5, 5];
+        }
+        worldThis[dirtHeight[i]+73-woodHeight][i] = 13;
+        blockThis[dirtHeight[i]+73-woodHeight][i] = [5, 5];
+      }
+    }
+    for (var i = 0; i < 2; i++) {
+      for (var j = 0; j < 5; j++) {
+        worldThis[71-i][498+j] = 103;
+        blockThis[71-i][498+j] = [0, 0];
+      }
+    }
+    for (var i = 0; i < 5; i++) {
+      worldThis[72][498+i] = 3;
+      blockThis[72][498+i] = [1e308, 1e308];
+    }
   }
 
   keypress = {};
@@ -144,9 +204,9 @@ $(function (){
   function overallCollision() {
     collisionActive = [0, 0, 0, 0];
     bottomCollision();
+    topCollision();
     rightCollision();
     leftCollision();
-    topCollision();
     // intgerCollision();
   }
   function topCollision() {
@@ -157,6 +217,13 @@ $(function (){
       if (playerPos[1]-Math.floor(playerPos[1]) > 0.9 && playerVelocity[1] < 0.5) {
         playerPos[1] = Math.ceil(playerPos[1])-0.01;
       }
+      playerVelocity[1] = 0;
+      clearTimeout(jumpOut);
+      playerJumping = 0;
+      collisionActive[0] = 1;
+    }
+    if (playerPos[1] < 1) {
+      playerPos[1] = 1;
       playerVelocity[1] = 0;
       clearTimeout(jumpOut);
       playerJumping = 0;
@@ -180,7 +247,7 @@ $(function (){
   function bottomCollision() {
     blockIDThis1 = worldThis[playerCPos[1]][Math.floor(playerPos[0]+(1-playerSize[0])/2)];
     blockIDThis2 = worldThis[playerCPos[1]][Math.ceil(playerPos[0]-(1-playerSize[0])/2)];
-    if (playerVelocity[1] > 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100) && !playerJumping) {
+    if ((playerVelocity[1] > 0 && (blockIDThis1 <= 100 || blockIDThis2 <= 100) && !playerJumping) || playerCPos[1] >= 299) {
       playerPos[1] -= playerVelocity[1]*tGain;
       if (playerPos[1]-Math.floor(playerPos[1]) > 0.9 && playerVelocity[1] < 0.5) {
         playerPos[1] = Math.ceil(playerPos[1])-0.01;
@@ -195,6 +262,9 @@ $(function (){
       }
       playerPos[1] += playerVelocity[1]*tGain;
       touchedBottom = 0;
+    }
+    if (playerPos[1] > 298) {
+      playerPos[1] = 298;
     }
   }
   function leftCollision() {
@@ -270,7 +340,7 @@ $(function (){
     playerRPos = [Math.round(playerPos[0]), Math.round(playerPos[1])];
     playerDPos = [Math.floor(playerFPos[0])-playerPos[0], Math.floor(playerFPos[1])-playerPos[1]];
     screenStartPos = [playerFPos[0]-7, playerFPos[1]-7];
-    playerAtk = 10;
+    playerAtk = 3;
   }
   function movePlayer() {
     vSpeed = 10;
@@ -312,7 +382,7 @@ $(function (){
         playerVelocity[1] = 0;
         jumpOut = setTimeout( function () {
           playerJumping = 0;
-        }, 600);
+        }, 700);
       }
     } else if (!keypress['38']) {
       playerJumping = 0;
